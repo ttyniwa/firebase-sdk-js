@@ -3,7 +3,7 @@ import * as express from 'express'
 import * as admin from 'firebase-admin'
 import { CustomHeaders, ParamJSON, SDKConfig } from '../src/sdk/const/types'
 
-declare module 'freee-firebase-sdk' {
+declare module 'freee-firebase-sdk-functions-gen-2' {
   /**
    * Freee Server SDK
    */

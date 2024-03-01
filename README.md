@@ -62,7 +62,7 @@ Firebase の基礎知識については、Google が提供する[Firebase のド
 
 該当のプロジェクトディレクトリで以下のコマンドを実行してください。
 
-`npm install freee-firebase-sdk`
+`npm install freee-firebase-sdk-functions-gen-2`
 
 ## ライセンス
 
