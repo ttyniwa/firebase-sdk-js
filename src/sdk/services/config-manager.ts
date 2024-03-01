@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions'
 import { SDKBaseConfig } from '../const/types'
-import { error as loggerError } from 'firebase-functions/logger'
 import { config as loadEnv } from 'dotenv'
 
 loadEnv()
@@ -129,9 +128,6 @@ export class ConfigManager {
   }
 
   static getFunctionsConfigs(): FirebaseFunctionsConfigs {
-    if (!freeeClientId || !freeeClientSecret) {
-      loggerError('Freee client id or client secret was not get successfully, please check the secret keys')
-    }
     const config: FirebaseFunctionsConfigs = {
       env: {
         mode: envMode,
