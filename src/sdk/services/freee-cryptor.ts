@@ -2,8 +2,7 @@ import { Bucket } from '@google-cloud/storage'
 import { Cipher, Decipher } from 'crypto'
 import { format } from 'date-fns'
 import { FreeeToken } from '../const/types'
-
-const crypto = require('crypto')
+import * as crypto from 'crypto'
 
 const ALGORITHM = 'aes-256-cbc'
 const OUT = 'base64'
@@ -13,7 +12,7 @@ const IV_LENGTH = 16
 export interface FreeeTokenWithCryptInfo extends FreeeToken {
   keyFileName: string
   algorithm: string
-  iv: string
+  iv: Buffer
 }
 
 export class FreeeCryptor {
@@ -93,11 +92,11 @@ export class FreeeCryptor {
     }
   }
 
-  private cipher(cryptoKey: any, iv: any): Cipher {
+  private cipher(cryptoKey: Buffer, iv: Buffer): Cipher {
     return crypto.createCipheriv(ALGORITHM, cryptoKey, iv)
   }
 
-  private decipher(algorithm: string, cryptoKey: any, iv: any): Decipher {
+  private decipher(algorithm: string, cryptoKey: Buffer, iv: Buffer): Decipher {
     return crypto.createDecipheriv(algorithm, cryptoKey, iv)
   }
 
@@ -118,12 +117,12 @@ export class FreeeCryptor {
   }
 
   private crypt(
-    targetStr: any,
+    targetStr: string,
     algorithm: Cipher | Decipher,
     inputEncoding: any,
     outputEncoding: any,
   ) {
-    let result: any = algorithm.update(targetStr, inputEncoding, outputEncoding)
+    let result = algorithm.update(targetStr, inputEncoding, outputEncoding)
     result += algorithm.final(outputEncoding)
     return result
   }
