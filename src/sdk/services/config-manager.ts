@@ -7,13 +7,19 @@ loadEnv()
 const SUPPORTED_REGIONS = functions.SUPPORTED_REGIONS
 const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG!)
 const projectId = adminConfig.projectId
-const defaultRegion: typeof SUPPORTED_REGIONS[number] = 'asia-northeast1' as typeof SUPPORTED_REGIONS[number]
+const defaultRegion: (typeof SUPPORTED_REGIONS)[number] =
+  'asia-northeast1' as (typeof SUPPORTED_REGIONS)[number]
 
-let region: typeof SUPPORTED_REGIONS[number]
-const supportedRegionsArray: string[] = SUPPORTED_REGIONS.map(regionMap => regionMap)
+let region: (typeof SUPPORTED_REGIONS)[number]
+const supportedRegionsArray: string[] = SUPPORTED_REGIONS.map(
+  (regionMap) => regionMap
+)
 
-if (process.env.ENV_REGION && supportedRegionsArray.includes(process.env.ENV_REGION)) {
-  region = process.env.ENV_REGION as typeof SUPPORTED_REGIONS[number]
+if (
+  process.env.ENV_REGION &&
+  supportedRegionsArray.includes(process.env.ENV_REGION)
+) {
+  region = process.env.ENV_REGION as (typeof SUPPORTED_REGIONS)[number]
 } else {
   region = defaultRegion
 }
@@ -33,7 +39,7 @@ export enum ConfigKeys {
   tokenHost = 'tokenHost',
   authorizePath = 'authorizePath',
   tokenPath = 'tokenPath',
-  cryptoKeyBucket = 'cryptoKeyBucket'
+  cryptoKeyBucket = 'cryptoKeyBucket',
 }
 
 interface FirebaseFunctionsConfigs {
@@ -146,7 +152,7 @@ export class ConfigManager {
       .concat(DEFAULT_CONFIGS.freee)
       .concat(DEFAULT_CONFIGS.firebase)
     const config = defaultConfigs.find(
-      defaultConfig => defaultConfig.key === key
+      (defaultConfig) => defaultConfig.key === key
     )!
     return this.isProduction() && config.production
       ? config.production
@@ -159,6 +165,6 @@ export class ConfigManager {
   }
 
   private static hasKey(configs: SDKBaseConfig, key: ConfigKeys) {
-    return Object.keys(configs).find(configKey => configKey === key)
+    return Object.keys(configs).find((configKey) => configKey === key)
   }
 }

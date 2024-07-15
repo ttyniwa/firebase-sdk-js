@@ -156,7 +156,7 @@ export class FreeeFirebaseAuthClient {
         email: email,
         displayName: displayName
       })
-      .catch(async error => {
+      .catch(async (error) => {
         if (error.code === 'auth/user-not-found') {
           return await this.admin.auth().createUser({
             uid: uid,

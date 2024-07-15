@@ -21,7 +21,7 @@ export class FreeeAPIClient {
     userId: string,
     customHeaders?: CustomHeaders
   ): AxiosPromise<T> {
-    return this.tokenManager.get(userId).then(accessToken => {
+    return this.tokenManager.get(userId).then((accessToken) => {
       const headers = {
         Authorization: `Bearer ${accessToken}`,
         'X-Api-Version': '2020-06-15',
@@ -45,7 +45,7 @@ export class FreeeAPIClient {
     userId: string,
     customHeaders?: CustomHeaders
   ): AxiosPromise<T> {
-    return this.tokenManager.get(userId).then(accessToken => {
+    return this.tokenManager.get(userId).then((accessToken) => {
       let sendData = data
       let sendHeaders: { [key: string]: any } = {}
       let sendContentType = 'application/json'
@@ -54,7 +54,7 @@ export class FreeeAPIClient {
       const isMultipartRequest = url === 'api/1/receipts'
       if (isMultipartRequest) {
         const formData = new FormData()
-        Object.keys(data).forEach(key => {
+        Object.keys(data).forEach((key) => {
           formData.append(key, data[key])
         })
         sendData = formData
@@ -87,7 +87,7 @@ export class FreeeAPIClient {
     userId: string,
     customHeaders?: CustomHeaders
   ): AxiosPromise<T> {
-    return this.tokenManager.get(userId).then(accessToken => {
+    return this.tokenManager.get(userId).then((accessToken) => {
       const headers = {
         Authorization: `Bearer ${accessToken}`,
         'X-Api-Version': '2020-06-15',
@@ -109,7 +109,7 @@ export class FreeeAPIClient {
     userId: string,
     customHeaders?: CustomHeaders
   ): AxiosPromise {
-    return this.tokenManager.get(userId).then(accessToken => {
+    return this.tokenManager.get(userId).then((accessToken) => {
       const headers = {
         Authorization: `Bearer ${accessToken}`,
         'X-Api-Version': '2020-06-15',
