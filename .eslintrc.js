@@ -62,7 +62,7 @@ module.exports = {
     '@typescript-eslint/unified-signatures': 'warn',
     'arrow-parens': ['off', 'always'],
     'brace-style': ['off', 'off'],
-    'comma-dangle': 'warn',
+    'comma-dangle': 'off',
     'constructor-super': 'error',
     'eol-last': 'off',
     eqeqeq: ['warn', 'always'],
