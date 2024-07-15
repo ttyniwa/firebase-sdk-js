@@ -2,34 +2,36 @@
  * @fileoverview sdk for freee api in server side
  */
 import axios from 'axios'
-import * as admin from 'firebase-admin'
 import { FreeeAPIClient } from './api/freee-api-client'
 import { FreeeFirebaseAuthClient } from './auth/freee-firebase-auth-client'
 import { SDKConfig } from './const/types'
 import { ConfigManager } from './services/config-manager'
 import { FreeeCryptor } from './services/freee-cryptor'
 import { TokenManager } from './services/token-manager'
+import { app, credential, initializeApp, ServiceAccount } from 'firebase-admin'
+import { App } from 'firebase-admin/app'
 
 export class FreeeServerSDK {
-  private admin: admin.app.App
+  private firebaseAdminApp: app.App
   private apiClient: FreeeAPIClient
   private firebaseAuthClient: FreeeFirebaseAuthClient
 
-  constructor(
-    config: SDKConfig,
-    serviceAccount: { [key: string]: string } | null,
-  ) {
-    // Set up firebase admin
+  /**
+   * @param serviceAccount Cloud Run、App Engine、Cloud Functions などの Google 環境で実行されるアプリケーションではnullを指定することを強くおすすめします。
+   *                       https://firebase.google.com/docs/admin/setup?hl=ja#initialize-sdk
+   */
+  constructor(config: SDKConfig, serviceAccount: ServiceAccount | null) {
+    // Set up firebase-admin
     if (serviceAccount) {
       // for local
-      this.admin = admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
-        storageBucket: `${serviceAccount.project_id}.appspot.com`,
+      this.firebaseAdminApp = initializeApp({
+        credential: credential.cert(serviceAccount),
+        databaseURL: `https://${serviceAccount.projectId}.firebaseio.com`,
+        storageBucket: `${serviceAccount.projectId}.appspot.com`,
       })
     } else {
       // Firebase setup by ADC
-      this.admin = admin.initializeApp()
+      this.firebaseAdminApp = initializeApp()
     }
 
     // Set up cryptor for freee token
@@ -38,18 +40,24 @@ export class FreeeServerSDK {
       'cryptoKeyBucket',
     )
     const cryptor = cryptoKeyBucket
-      ? new FreeeCryptor(this.admin.storage().bucket(cryptoKeyBucket))
+      ? new FreeeCryptor(
+          this.firebaseAdminApp.storage().bucket(cryptoKeyBucket),
+        )
       : null
 
     // Set up oauth2 client
     const oauth2 = require('simple-oauth2').create(this.getCredentials(config))
-    const tokenManager = new TokenManager(this.admin, oauth2, cryptor)
+    const tokenManager = new TokenManager(
+      this.firebaseAdminApp,
+      oauth2,
+      cryptor,
+    )
 
     axios.defaults.baseURL = ConfigManager.getFreeeConfig(config, 'apiHost')
 
     this.apiClient = new FreeeAPIClient(tokenManager, axios)
     this.firebaseAuthClient = new FreeeFirebaseAuthClient(
-      this.admin,
+      this.firebaseAdminApp,
       oauth2,
       axios,
       tokenManager,
@@ -57,23 +65,14 @@ export class FreeeServerSDK {
     )
   }
 
-  /**
-   * get firebase admin instance
-   */
-  firebaseApp(): admin.app.App {
-    return this.admin
+  firebaseApp(): App {
+    return this.firebaseAdminApp
   }
 
-  /**
-   * get firebase admin instance
-   */
   api(): FreeeAPIClient {
     return this.apiClient
   }
 
-  /**
-   * get firebase admin instance
-   */
   auth(): FreeeFirebaseAuthClient {
     return this.firebaseAuthClient
   }
