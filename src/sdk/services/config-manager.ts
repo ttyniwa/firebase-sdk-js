@@ -21,7 +21,7 @@ type FreeeConfigKeys = keyof SDKFreeeConfig
 interface FirebaseFunctionsConfigs {
   env: {
     mode: 'production' | string
-    region: SupportedRegions | string
+    region: SupportedRegions
   }
   freee: {
     client_id: string
