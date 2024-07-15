@@ -2,7 +2,7 @@ import { AxiosStatic } from 'axios'
 import * as firebaseAdmin from 'firebase-admin'
 import { Response } from 'firebase-functions'
 import { FreeeToken, SDKConfig } from '../const/types'
-import { ConfigKeys, ConfigManager } from '../services/config-manager'
+import { ConfigManager } from '../services/config-manager'
 import { TokenManager } from '../services/token-manager'
 
 export class FreeeFirebaseAuthClient {
@@ -33,18 +33,14 @@ export class FreeeFirebaseAuthClient {
     this.axios = axios
     this.tokenManager = tokenManager
     // path setting
-    const freeeConfigs = config.freee!
     this.clientId = ConfigManager.config.freee.client_id
     this.clientSecret = ConfigManager.config.freee.client_secret
-    this.redirectPath = ConfigManager.get(freeeConfigs, ConfigKeys.redirectPath)
-    this.callbackPath = ConfigManager.get(freeeConfigs, ConfigKeys.callbackPath)
-    this.companiesPath = ConfigManager.get(
-      freeeConfigs,
-      ConfigKeys.companiesPath,
-    )
-    this.homePath = ConfigManager.get(freeeConfigs, ConfigKeys.homePath)
-    this.appHost = ConfigManager.get(freeeConfigs, ConfigKeys.appHost)
-    this.authHost = ConfigManager.get(freeeConfigs, ConfigKeys.authHost)
+    this.redirectPath = ConfigManager.getFreeeConfig(config, 'redirectPath')
+    this.callbackPath = ConfigManager.getFreeeConfig(config, 'callbackPath')
+    this.companiesPath = ConfigManager.getFreeeConfig(config, 'companiesPath')
+    this.homePath = ConfigManager.getFreeeConfig(config, 'homePath')
+    this.appHost = ConfigManager.getFreeeConfig(config, 'appHost')
+    this.authHost = ConfigManager.getFreeeConfig(config, 'authHost')
     this.apiKey = config.firebase && config.firebase.apiKey!
   }
 

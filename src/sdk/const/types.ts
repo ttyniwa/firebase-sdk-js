@@ -13,11 +13,7 @@ export interface FreeeToken {
   createdAt: number
 }
 
-export interface SDKBaseConfig {
-  [key: string]: any
-}
-
-export interface SDKFreeeConfig extends SDKBaseConfig {
+export interface SDKFreeeConfig {
   /**
    * Redirect path
    *
@@ -55,7 +51,7 @@ export interface SDKFreeeConfig extends SDKBaseConfig {
   appHost?: string
 
   /**
-   * Authrization host url
+   * Authorization host url
    *
    * @defaultValue `http://localhost:5001/${process.env.FIREBASE_CONFIG.projectId}/us-central1/api/auth`
    * @defaultValue `https://${functions.config().env.region || 'asia-northeast1'}-${process.env.FIREBASE_CONFIG.projectId}.cloudfunctions.net/api/auth` when functions.config().env.mode === 'production'
@@ -93,7 +89,7 @@ export interface SDKFreeeConfig extends SDKBaseConfig {
   tokenPath?: string
 }
 
-export interface SDKFirebaseConfig extends SDKBaseConfig {
+export interface SDKFirebaseConfig {
   /**
    * Api key for firebase project
    */

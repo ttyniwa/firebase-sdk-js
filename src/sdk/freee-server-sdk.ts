@@ -5,8 +5,8 @@ import axios from 'axios'
 import * as admin from 'firebase-admin'
 import { FreeeAPIClient } from './api/freee-api-client'
 import { FreeeFirebaseAuthClient } from './auth/freee-firebase-auth-client'
-import { SDKConfig, SDKFreeeConfig } from './const/types'
-import { ConfigKeys, ConfigManager } from './services/config-manager'
+import { SDKConfig } from './const/types'
+import { ConfigManager } from './services/config-manager'
 import FreeeCryptor from './services/freee-cryptor'
 import { TokenManager } from './services/token-manager'
 
@@ -19,7 +19,6 @@ class FreeeServerSDK {
     config: SDKConfig,
     serviceAccount: { [key: string]: string } | null,
   ) {
-    const freeeConfigs = config.freee!
     // Set up firebase admin
     if (serviceAccount) {
       // for local
@@ -34,21 +33,19 @@ class FreeeServerSDK {
     }
 
     // Set up cryptor for freee token
-    const cryptoKeyBucket = ConfigManager.get(
-      config.firebase!,
-      ConfigKeys.cryptoKeyBucket,
+    const cryptoKeyBucket = ConfigManager.getFirebaseConfig(
+      config,
+      'cryptoKeyBucket',
     )
     const cryptor = cryptoKeyBucket
       ? new FreeeCryptor(this.admin.storage().bucket(cryptoKeyBucket))
       : null
 
     // Set up oauth2 client
-    const oauth2 = require('simple-oauth2').create(
-      this.getCredentials(freeeConfigs),
-    )
+    const oauth2 = require('simple-oauth2').create(this.getCredentials(config))
     const tokenManager = new TokenManager(this.admin, oauth2, cryptor)
 
-    axios.defaults.baseURL = ConfigManager.get(freeeConfigs, ConfigKeys.apiHost)
+    axios.defaults.baseURL = ConfigManager.getFreeeConfig(config, 'apiHost')
 
     this.apiClient = new FreeeAPIClient(tokenManager, axios)
     this.firebaseAuthClient = new FreeeFirebaseAuthClient(
@@ -81,21 +78,16 @@ class FreeeServerSDK {
     return this.firebaseAuthClient
   }
 
-  private getCredentials(freeeConfigs: SDKFreeeConfig) {
-    const freee = ConfigManager.config.freee
-
+  private getCredentials(config: SDKConfig) {
     const credentials = {
       client: {
-        id: freee.client_id,
-        secret: freee.client_secret,
+        id: ConfigManager.config.freee.client_id,
+        secret: ConfigManager.config.freee.client_secret,
       },
       auth: {
-        tokenHost: ConfigManager.get(freeeConfigs, ConfigKeys.tokenHost),
-        authorizePath: ConfigManager.get(
-          freeeConfigs,
-          ConfigKeys.authorizePath,
-        ),
-        tokenPath: ConfigManager.get(freeeConfigs, ConfigKeys.tokenPath),
+        tokenHost: ConfigManager.getFreeeConfig(config, 'tokenHost'),
+        authorizePath: ConfigManager.getFreeeConfig(config, 'authorizePath'),
+        tokenPath: ConfigManager.getFreeeConfig(config, 'tokenPath'),
       },
     }
 

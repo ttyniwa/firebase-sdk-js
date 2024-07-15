@@ -21,52 +21,51 @@ jest.mock('firebase-functions', () => {
   }
 })
 
-import { ConfigKeys, ConfigManager } from '../../../sdk/services/config-manager'
+import { ConfigManager } from '../../../sdk/services/config-manager'
 
 beforeAll(() => {
   console.log('call before all')
 })
 
 describe('ConfigManager', () => {
-  describe('get', () => {
+  describe('getFirebaseConfig', () => {
     it('return default value if config is null or does not have key', () => {
-      expect(ConfigManager.get(null, ConfigKeys.apiHost)).toStrictEqual(
+      expect(
+        ConfigManager.getFirebaseConfig(null, 'cryptoKeyBucket'),
+      ).toStrictEqual(`${PROJECT_ID}.appspot.com`)
+      expect(
+        ConfigManager.getFirebaseConfig({}, 'cryptoKeyBucket'),
+      ).toStrictEqual(`${PROJECT_ID}.appspot.com`)
+    })
+    it('return config value if config is not null and has key', () =>
+      expect(
+        ConfigManager.getFirebaseConfig(
+          { firebase: { cryptoKeyBucket: 'cryptoKeyBucket' } },
+          'cryptoKeyBucket',
+        ),
+      ).toStrictEqual('cryptoKeyBucket'))
+  })
+
+  describe('getFreeeConfig', () => {
+    it('return default value if config is null or does not have key', () => {
+      expect(ConfigManager.getFreeeConfig(null, 'apiHost')).toStrictEqual(
         'https://api.freee.co.jp',
       )
-      expect(ConfigManager.get({}, ConfigKeys.apiHost)).toStrictEqual(
+      expect(ConfigManager.getFreeeConfig({}, 'apiHost')).toStrictEqual(
         'https://api.freee.co.jp',
+      )
+    })
+    it('return production value if config is null or does not have key', () => {
+      expect(ConfigManager.getFreeeConfig(null, 'appHost')).toStrictEqual(
+        `https://${PROJECT_ID}.web.app`,
       )
     })
     it('return config value if config is not null and has key', () =>
       expect(
-        ConfigManager.get({ apiHost: 'apiHost' }, ConfigKeys.apiHost),
-      ).toStrictEqual('apiHost'))
-  })
-
-  describe('getDefaultValue', () => {
-    it('return default value if config does not have production value', () =>
-      expect(
-        ConfigManager['getDefaultValue'](ConfigKeys.redirectPath),
-      ).toStrictEqual('/redirect'))
-
-    it('return production value if config have production value', () => {
-      expect(
-        ConfigManager['getDefaultValue'](ConfigKeys.apiHost),
-      ).toStrictEqual('https://api.freee.co.jp')
-      expect(
-        ConfigManager['getDefaultValue'](ConfigKeys.appHost),
-      ).toStrictEqual(`https://${PROJECT_ID}.web.app`)
-      expect(
-        ConfigManager['getDefaultValue'](ConfigKeys.authHost),
-      ).toStrictEqual(
-        `https://${REGION_US}-${PROJECT_ID}.cloudfunctions.net/api/auth`,
-      )
-      expect(
-        ConfigManager['getDefaultValue'](ConfigKeys.tokenHost),
-      ).toStrictEqual('https://accounts.secure.freee.co.jp')
-      expect(
-        ConfigManager['getDefaultValue'](ConfigKeys.cryptoKeyBucket),
-      ).toStrictEqual(`${PROJECT_ID}.appspot.com`)
-    })
+        ConfigManager.getFreeeConfig(
+          { freee: { apiHost: 'https://localhost' } },
+          'apiHost',
+        ),
+      ).toStrictEqual('https://localhost'))
   })
 })
