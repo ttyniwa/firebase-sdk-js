@@ -9,8 +9,8 @@
   },
   "scripts": {
     "lint": "eslint --fix -c .eslintrc.js --ext .tsx --ext .ts src",
-    "build": "webpack --mode production",
-    "watch": "webpack --watch --mode development",
+    "build": "npx tsc",
+    "watch": "npx tsc --watch",
     "serve": "firebase serve --only functions -o 0.0.0.0",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
