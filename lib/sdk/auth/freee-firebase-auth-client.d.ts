@@ -3,13 +3,12 @@ import * as firebaseAdmin from 'firebase-admin';
 import { Response } from 'firebase-functions';
 import { SDKConfig } from '../const/types';
 import { TokenManager } from '../services/token-manager';
+import { AuthorizationCode } from 'simple-oauth2';
 export declare class FreeeFirebaseAuthClient {
     private admin;
-    private oauth2;
+    private authorizationCode;
     private axios;
     private tokenManager;
-    private clientId;
-    private clientSecret;
     private redirectPath;
     private callbackPath;
     private companiesPath;
@@ -17,7 +16,7 @@ export declare class FreeeFirebaseAuthClient {
     private appHost;
     private authHost;
     private apiKey?;
-    constructor(admin: firebaseAdmin.app.App, oauth2: any, axios: AxiosStatic, tokenManager: TokenManager, config: SDKConfig);
+    constructor(admin: firebaseAdmin.app.App, authorizationCode: AuthorizationCode, axios: AxiosStatic, tokenManager: TokenManager, config: SDKConfig);
     /**
      * Redirect screen to authorize
      */

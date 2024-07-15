@@ -1,22 +1,23 @@
 import * as firebaseAdmin from 'firebase-admin'
 import { FreeeToken } from '../const/types'
 import { FreeeCryptor, FreeeTokenWithCryptInfo } from './freee-cryptor'
+import { AuthorizationCode } from 'simple-oauth2'
 
 const MARGIN_OF_EXPIRES_SECONDS = 300
 
 export class TokenManager {
   private admin: firebaseAdmin.app.App
-  private oauth2: any // Can not use typescript version due to mismatch with freee oauth
+  private authorizationCode: AuthorizationCode // Can not use typescript version due to mismatch with freee oauth
   private cryptor: FreeeCryptor | null
   private tokenCache: { [key: string]: FreeeTokenWithCryptInfo }
 
   constructor(
     admin: firebaseAdmin.app.App,
-    oauth2: any,
+    authorizationCode: AuthorizationCode,
     cryptor: FreeeCryptor | null,
   ) {
     this.admin = admin
-    this.oauth2 = oauth2
+    this.authorizationCode = authorizationCode
     this.cryptor = cryptor
     this.tokenCache = {}
   }
@@ -87,15 +88,15 @@ export class TokenManager {
       refresh_token: freeeToken.refreshToken,
       expires_in: freeeToken.expiresIn,
     }
-    const accessToken = this.oauth2.accessToken.create(tokenObject)
+    const accessToken = this.authorizationCode.createToken(tokenObject)
     const newToken = await accessToken.refresh()
 
     // encrypt and cache
     const token = (await this.encrypt({
-      accessToken: newToken.token.access_token,
-      refreshToken: newToken.token.refresh_token,
-      expiresIn: newToken.token.expires_in,
-      createdAt: newToken.token.created_at,
+      accessToken: newToken.token.access_token as string,
+      refreshToken: newToken.token.refresh_token as string,
+      expiresIn: newToken.token.expires_in as number,
+      createdAt: newToken.token.created_at as number,
     })) as FreeeTokenWithCryptInfo
     this.tokenCache[userId] = token
 
@@ -107,7 +108,7 @@ export class TokenManager {
 
     console.log('accessToken is successfully refreshed for user:', userId)
 
-    return newToken.token.access_token
+    return newToken.token.access_token as string
   }
 
   private tokenExpired(freeeToken: FreeeTokenWithCryptInfo) {

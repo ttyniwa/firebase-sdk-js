@@ -4,14 +4,13 @@ import { Response } from 'firebase-functions'
 import { FreeeToken, SDKConfig } from '../const/types'
 import { ConfigManager } from '../services/config-manager'
 import { TokenManager } from '../services/token-manager'
+import { AuthorizationCode } from 'simple-oauth2'
 
 export class FreeeFirebaseAuthClient {
   private admin: firebaseAdmin.app.App
-  private oauth2: any // Can not use typescript version due to mismatch with freee oauth
+  private authorizationCode: AuthorizationCode // Can not use typescript version due to mismatch with freee oauth
   private axios: AxiosStatic
   private tokenManager: TokenManager
-  private clientId: string
-  private clientSecret: string
   private redirectPath: string
   private callbackPath: string
   private companiesPath: string
@@ -23,18 +22,16 @@ export class FreeeFirebaseAuthClient {
 
   constructor(
     admin: firebaseAdmin.app.App,
-    oauth2: any,
+    authorizationCode: AuthorizationCode,
     axios: AxiosStatic,
     tokenManager: TokenManager,
     config: SDKConfig,
   ) {
     this.admin = admin
-    this.oauth2 = oauth2
+    this.authorizationCode = authorizationCode
     this.axios = axios
     this.tokenManager = tokenManager
     // path setting
-    this.clientId = ConfigManager.config.freee.client_id
-    this.clientSecret = ConfigManager.config.freee.client_secret
     this.redirectPath = ConfigManager.getFreeeConfig(config, 'redirectPath')
     this.callbackPath = ConfigManager.getFreeeConfig(config, 'callbackPath')
     this.companiesPath = ConfigManager.getFreeeConfig(config, 'companiesPath')
@@ -48,7 +45,7 @@ export class FreeeFirebaseAuthClient {
    * Redirect screen to authorize
    */
   redirect(res: Response): void {
-    const redirectUri = this.oauth2.authorizationCode.authorizeURL({
+    const redirectUri = this.authorizationCode.authorizeURL({
       redirect_uri: `${this.authHost}${this.getCallbackPath()}`,
     })
     res.redirect(redirectUri)
@@ -59,19 +56,17 @@ export class FreeeFirebaseAuthClient {
    */
   async callback(code: string, res: Response): Promise<void> {
     try {
-      const result = await this.oauth2.authorizationCode.getToken({
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
+      const result = await this.authorizationCode.getToken({
         code: code,
         redirect_uri: `${this.authHost}${this.getCallbackPath()}`,
       })
 
       const freeeToken = {
-        accessToken: result.access_token,
-        refreshToken: result.refresh_token,
-        expiresIn: result.expires_in,
-        createdAt: result.created_at,
-      }
+        accessToken: result.token.access_token as string,
+        refreshToken: result.token.refresh_token as string,
+        expiresIn: result.token.expires_in as number,
+        createdAt: result.token.created_at as number,
+      } satisfies FreeeToken
 
       // get freee user
       const response = await this.getFreeeUser(freeeToken.accessToken)
