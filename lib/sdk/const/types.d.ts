@@ -39,28 +39,27 @@ export interface SDKFreeeConfig {
      * Application host url
      *
      * @defaultValue "http://localhost:5000"
-     * @defaultValue `https://${process.env.FIREBASE_CONFIG.projectId}.web.app` when functions.config().env.mode === 'production'
+     * @defaultValue `https://${process.env.FIREBASE_CONFIG.projectId}.web.app` when process.env.ENV === 'production'
      */
     appHost?: string;
     /**
      * Authorization host url
      *
      * @defaultValue `http://localhost:5001/${process.env.FIREBASE_CONFIG.projectId}/us-central1/api/auth`
-     * @defaultValue `https://${functions.config().env.region || 'asia-northeast1'}-${process.env.FIREBASE_CONFIG.projectId}.cloudfunctions.net/api/auth` when functions.config().env.mode === 'production'
+     * @defaultValue `https://${process.env.ENV_REGION || 'asia-northeast1'}-${process.env.FIREBASE_CONFIG.projectId}.cloudfunctions.net/api/auth` when process.env.ENV_MODE === 'production'
      */
     authHost?: string;
     /**
      * freee API server host url
      *
      * @defaultValue "https://api.freee.co.jp"
-     * @defaultValue 'https://api.freee.co.jp' when functions.config().env.mode === 'production'
      */
     apiHost?: string;
     /**
      * freee token server host url
      *
-     * @defaultValue "https://accounts.secure.freee.co.jp"
-     * @defaultValue "https://accounts.secure.freee.co.jp" when functions.config().env.mode === 'production'
+     * @defaultValue "http://localhost:5001/${process.env.FIREBASE_CONFIG.projectId}/${process.env.ENV_REGION}/api/auth"
+     * @defaultValue "https://accounts.secure.freee.co.jp" when process.env.ENV_MODE === 'production'
      */
     tokenHost?: string;
     /**
