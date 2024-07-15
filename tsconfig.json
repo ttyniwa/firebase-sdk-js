@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "module": "commonjs",
+    "declaration": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "useUnknownInCatchVariables": false,
