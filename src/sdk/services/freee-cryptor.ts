@@ -16,7 +16,7 @@ export interface FreeeTokenWithCryptInfo extends FreeeToken {
   iv: string
 }
 
-class FreeeCryptor {
+export class FreeeCryptor {
   private bucket: Bucket
   private keyCache: { [key: string]: Buffer }
 
@@ -152,5 +152,3 @@ class FreeeCryptor {
     return isExists
   }
 }
-
-export default FreeeCryptor

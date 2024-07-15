@@ -1,6 +1,6 @@
 import * as firebaseAdmin from 'firebase-admin'
 import { FreeeToken } from '../const/types'
-import FreeeCryptor, { FreeeTokenWithCryptInfo } from './freee-cryptor'
+import { FreeeCryptor, FreeeTokenWithCryptInfo } from './freee-cryptor'
 
 const MARGIN_OF_EXPIRES_SECONDS = 300
 

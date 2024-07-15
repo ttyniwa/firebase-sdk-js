@@ -7,10 +7,10 @@ import { FreeeAPIClient } from './api/freee-api-client'
 import { FreeeFirebaseAuthClient } from './auth/freee-firebase-auth-client'
 import { SDKConfig } from './const/types'
 import { ConfigManager } from './services/config-manager'
-import FreeeCryptor from './services/freee-cryptor'
+import { FreeeCryptor } from './services/freee-cryptor'
 import { TokenManager } from './services/token-manager'
 
-class FreeeServerSDK {
+export class FreeeServerSDK {
   private admin: admin.app.App
   private apiClient: FreeeAPIClient
   private firebaseAuthClient: FreeeFirebaseAuthClient
@@ -94,5 +94,3 @@ class FreeeServerSDK {
     return credentials
   }
 }
-
-export default FreeeServerSDK
