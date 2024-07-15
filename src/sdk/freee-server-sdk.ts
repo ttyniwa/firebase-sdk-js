@@ -11,6 +11,7 @@ import { TokenManager } from './services/token-manager'
 import * as admin from 'firebase-admin'
 import { app, credential } from 'firebase-admin'
 import { App } from 'firebase-admin/app'
+import { AuthorizationCode } from 'simple-oauth2'
 
 export class FreeeServerSDK {
   private firebaseAdminApp: app.App
@@ -50,10 +51,10 @@ export class FreeeServerSDK {
       : null
 
     // Set up oauth2 client
-    const oauth2 = require('simple-oauth2').create(this.getCredentials(config))
+    const authorizationCode = new AuthorizationCode(this.getCredentials(config))
     const tokenManager = new TokenManager(
       this.firebaseAdminApp,
-      oauth2,
+      authorizationCode,
       cryptor,
     )
 
@@ -62,7 +63,7 @@ export class FreeeServerSDK {
     this.apiClient = new FreeeAPIClient(tokenManager, axios)
     this.firebaseAuthClient = new FreeeFirebaseAuthClient(
       this.firebaseAdminApp,
-      oauth2,
+      authorizationCode,
       axios,
       tokenManager,
       config,
