@@ -8,7 +8,8 @@ import { SDKConfig } from './const/types'
 import { ConfigManager } from './services/config-manager'
 import { FreeeCryptor } from './services/freee-cryptor'
 import { TokenManager } from './services/token-manager'
-import { app, credential, initializeApp } from 'firebase-admin'
+import * as admin from 'firebase-admin'
+import { app, credential } from 'firebase-admin'
 import { App } from 'firebase-admin/app'
 
 export class FreeeServerSDK {
@@ -27,14 +28,14 @@ export class FreeeServerSDK {
     // Set up firebase-admin
     if (serviceAccount) {
       // for local
-      this.firebaseAdminApp = initializeApp({
+      this.firebaseAdminApp = admin.initializeApp({
         credential: credential.cert(serviceAccount),
         databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
         storageBucket: `${serviceAccount.project_id}.appspot.com`,
       })
     } else {
       // Firebase setup by ADC
-      this.firebaseAdminApp = initializeApp()
+      this.firebaseAdminApp = admin.initializeApp()
     }
 
     // Set up cryptor for freee token
