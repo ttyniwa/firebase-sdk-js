@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Bucket } from '@google-cloud/storage';
 import { FreeeToken } from '../const/types';
 export interface FreeeTokenWithCryptInfo extends FreeeToken {
