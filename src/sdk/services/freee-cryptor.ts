@@ -54,7 +54,7 @@ class FreeeCryptor {
       refreshToken: this.crypt(refreshToken, this.cipher(key, iv), IN, OUT),
       keyFileName,
       algorithm: ALGORITHM,
-      iv
+      iv,
     }
   }
 
@@ -71,7 +71,7 @@ class FreeeCryptor {
    * @return {Promise<Object>} - decrypted freee token object
    */
   async decrypt(
-    token: FreeeTokenWithCryptInfo
+    token: FreeeTokenWithCryptInfo,
   ): Promise<FreeeTokenWithCryptInfo> {
     const { accessToken, refreshToken, keyFileName, algorithm, iv } = token
     const key = await this.getKey(keyFileName)
@@ -82,14 +82,14 @@ class FreeeCryptor {
         accessToken,
         this.decipher(algorithm, key, iv),
         OUT,
-        IN
+        IN,
       ),
       refreshToken: this.crypt(
         refreshToken,
         this.decipher(algorithm, key, iv),
         OUT,
-        IN
-      )
+        IN,
+      ),
     }
   }
 
@@ -121,7 +121,7 @@ class FreeeCryptor {
     targetStr: any,
     algorithm: Cipher | Decipher,
     inputEncoding: any,
-    outputEncoding: any
+    outputEncoding: any,
   ) {
     let result: any = algorithm.update(targetStr, inputEncoding, outputEncoding)
     result += algorithm.final(outputEncoding)
@@ -147,7 +147,7 @@ class FreeeCryptor {
     const isExists = response[0]
     console.log(
       `Crypto key ${isExists ? 'is' : 'is not'} exists storage for:`,
-      keyFileName
+      keyFileName,
     )
     return isExists
   }

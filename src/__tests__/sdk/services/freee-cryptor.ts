@@ -14,10 +14,10 @@ jest.mock('firebase-admin', () => {
         file: (filePath: string) => ({
           download: async () => mockDownload(),
           exists: async () => mockExists(),
-          save: async () => mockSave()
-        })
-      })
-    })
+          save: async () => mockSave(),
+        }),
+      }),
+    }),
   }
 })
 
@@ -81,7 +81,7 @@ describe('FreeeCryptor', () => {
 
       const cryptor = new FreeeCryptor(bucket)
       await expect(cryptor['getKey'](keyFileName)).rejects.toThrow(
-        'Unknown exists error'
+        'Unknown exists error',
       )
     })
 

@@ -13,7 +13,7 @@ export class TokenManager {
   constructor(
     admin: firebaseAdmin.app.App,
     oauth2: any,
-    cryptor: FreeeCryptor | null
+    cryptor: FreeeCryptor | null,
   ) {
     this.admin = admin
     this.oauth2 = oauth2
@@ -57,7 +57,7 @@ export class TokenManager {
   async save(
     userId: string,
     email: string,
-    freeeToken: FreeeToken
+    freeeToken: FreeeToken,
   ): Promise<void> {
     const token = await this.encrypt(freeeToken)
 
@@ -67,7 +67,7 @@ export class TokenManager {
       .doc(`/freeeTokens/${userId}`)
       .set({
         ...token,
-        email
+        email,
       })
   }
 
@@ -79,13 +79,13 @@ export class TokenManager {
 
   private async refreshToken(
     freeeToken: FreeeTokenWithCryptInfo,
-    userId: string
+    userId: string,
   ) {
     // refresh
     const tokenObject = {
       access_token: freeeToken.accessToken,
       refresh_token: freeeToken.refreshToken,
-      expires_in: freeeToken.expiresIn
+      expires_in: freeeToken.expiresIn,
     }
     const accessToken = this.oauth2.accessToken.create(tokenObject)
     const newToken = await accessToken.refresh()
@@ -95,7 +95,7 @@ export class TokenManager {
       accessToken: newToken.token.access_token,
       refreshToken: newToken.token.refresh_token,
       expiresIn: newToken.token.expires_in,
-      createdAt: newToken.token.created_at
+      createdAt: newToken.token.created_at,
     })) as FreeeTokenWithCryptInfo
     this.tokenCache[userId] = token
 

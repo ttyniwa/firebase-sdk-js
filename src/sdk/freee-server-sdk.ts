@@ -17,7 +17,7 @@ class FreeeServerSDK {
 
   constructor(
     config: SDKConfig,
-    serviceAccount: { [key: string]: string } | null
+    serviceAccount: { [key: string]: string } | null,
   ) {
     const freeeConfigs = config.freee!
     // Set up firebase admin
@@ -26,7 +26,7 @@ class FreeeServerSDK {
       this.admin = admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
-        storageBucket: `${serviceAccount.project_id}.appspot.com`
+        storageBucket: `${serviceAccount.project_id}.appspot.com`,
       })
     } else {
       // Firebase setup by ADC
@@ -36,7 +36,7 @@ class FreeeServerSDK {
     // Set up cryptor for freee token
     const cryptoKeyBucket = ConfigManager.get(
       config.firebase!,
-      ConfigKeys.cryptoKeyBucket
+      ConfigKeys.cryptoKeyBucket,
     )
     const cryptor = cryptoKeyBucket
       ? new FreeeCryptor(this.admin.storage().bucket(cryptoKeyBucket))
@@ -44,7 +44,7 @@ class FreeeServerSDK {
 
     // Set up oauth2 client
     const oauth2 = require('simple-oauth2').create(
-      this.getCredentials(freeeConfigs)
+      this.getCredentials(freeeConfigs),
     )
     const tokenManager = new TokenManager(this.admin, oauth2, cryptor)
 
@@ -56,7 +56,7 @@ class FreeeServerSDK {
       oauth2,
       axios,
       tokenManager,
-      config
+      config,
     )
   }
 
@@ -87,16 +87,16 @@ class FreeeServerSDK {
     const credentials = {
       client: {
         id: freee.client_id,
-        secret: freee.client_secret
+        secret: freee.client_secret,
       },
       auth: {
         tokenHost: ConfigManager.get(freeeConfigs, ConfigKeys.tokenHost),
         authorizePath: ConfigManager.get(
           freeeConfigs,
-          ConfigKeys.authorizePath
+          ConfigKeys.authorizePath,
         ),
-        tokenPath: ConfigManager.get(freeeConfigs, ConfigKeys.tokenPath)
-      }
+        tokenPath: ConfigManager.get(freeeConfigs, ConfigKeys.tokenPath),
+      },
     }
 
     return credentials

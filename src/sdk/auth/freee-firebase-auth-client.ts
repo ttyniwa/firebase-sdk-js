@@ -26,7 +26,7 @@ export class FreeeFirebaseAuthClient {
     oauth2: any,
     axios: AxiosStatic,
     tokenManager: TokenManager,
-    config: SDKConfig
+    config: SDKConfig,
   ) {
     this.admin = admin
     this.oauth2 = oauth2
@@ -41,7 +41,7 @@ export class FreeeFirebaseAuthClient {
     this.callbackPath = ConfigManager.get(freeeConfigs, ConfigKeys.callbackPath)
     this.companiesPath = ConfigManager.get(
       freeeConfigs,
-      ConfigKeys.companiesPath
+      ConfigKeys.companiesPath,
     )
     this.homePath = ConfigManager.get(freeeConfigs, ConfigKeys.homePath)
     this.appHost = ConfigManager.get(freeeConfigs, ConfigKeys.appHost)
@@ -54,7 +54,7 @@ export class FreeeFirebaseAuthClient {
    */
   redirect(res: Response): void {
     const redirectUri = this.oauth2.authorizationCode.authorizeURL({
-      redirect_uri: `${this.authHost}${this.getCallbackPath()}`
+      redirect_uri: `${this.authHost}${this.getCallbackPath()}`,
     })
     res.redirect(redirectUri)
   }
@@ -68,14 +68,14 @@ export class FreeeFirebaseAuthClient {
         client_id: this.clientId,
         client_secret: this.clientSecret,
         code: code,
-        redirect_uri: `${this.authHost}${this.getCallbackPath()}`
+        redirect_uri: `${this.authHost}${this.getCallbackPath()}`,
       })
 
       const freeeToken = {
         accessToken: result.access_token,
         refreshToken: result.refresh_token,
         expiresIn: result.expires_in,
-        createdAt: result.created_at
+        createdAt: result.created_at,
       }
 
       // get freee user
@@ -92,7 +92,7 @@ export class FreeeFirebaseAuthClient {
         id,
         email,
         displayName,
-        freeeToken
+        freeeToken,
       )
       // redirect to home path with token info
       res.redirect(`${this.appHost}${this.homePath}?token=${firebaseToken}`)
@@ -132,7 +132,7 @@ export class FreeeFirebaseAuthClient {
 
   private getFreeeUser(accessToken: string) {
     return this.axios.get('/api/1/users/me?companies=true', {
-      headers: { Authorization: `Bearer ${accessToken}` }
+      headers: { Authorization: `Bearer ${accessToken}` },
     })
   }
 
@@ -143,7 +143,7 @@ export class FreeeFirebaseAuthClient {
     id: number,
     email: string,
     displayName: string,
-    freeeToken: FreeeToken
+    freeeToken: FreeeToken,
   ): Promise<string> {
     const uid = id.toString()
 
@@ -154,14 +154,14 @@ export class FreeeFirebaseAuthClient {
       .auth()
       .updateUser(uid, {
         email: email,
-        displayName: displayName
+        displayName: displayName,
       })
       .catch(async (error) => {
         if (error.code === 'auth/user-not-found') {
           return await this.admin.auth().createUser({
             uid: uid,
             email: email,
-            displayName: displayName
+            displayName: displayName,
           })
         }
         throw error

@@ -7,12 +7,11 @@ loadEnv()
 const SUPPORTED_REGIONS = functions.SUPPORTED_REGIONS
 const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG!)
 const projectId = adminConfig.projectId
-const defaultRegion: (typeof SUPPORTED_REGIONS)[number] =
-  'asia-northeast1' as (typeof SUPPORTED_REGIONS)[number]
+const defaultRegion = 'asia-northeast1' as (typeof SUPPORTED_REGIONS)[number]
 
 let region: (typeof SUPPORTED_REGIONS)[number]
 const supportedRegionsArray: string[] = SUPPORTED_REGIONS.map(
-  (regionMap) => regionMap
+  (regionMap) => regionMap,
 )
 
 if (
@@ -74,54 +73,54 @@ const DEFAULT_CONFIGS: DefaltConfigs = {
     {
       key: ConfigKeys.apiHost,
       default: 'https://api.freee.co.jp',
-      production: 'https://api.freee.co.jp'
+      production: 'https://api.freee.co.jp',
     },
     {
       key: ConfigKeys.appHost,
       default: 'http://localhost:5000',
-      production: `https://${projectId}.web.app`
+      production: `https://${projectId}.web.app`,
     },
     {
       key: ConfigKeys.authHost,
       default: `http://localhost:5001/${projectId}/${region}/api/auth`,
-      production: `https://${region}-${projectId}.cloudfunctions.net/api/auth`
+      production: `https://${region}-${projectId}.cloudfunctions.net/api/auth`,
     },
     {
       key: ConfigKeys.redirectPath,
-      default: '/redirect'
+      default: '/redirect',
     },
     {
       key: ConfigKeys.callbackPath,
-      default: '/callback'
+      default: '/callback',
     },
     {
       key: ConfigKeys.companiesPath,
-      default: '/companies'
+      default: '/companies',
     },
     {
       key: ConfigKeys.homePath,
-      default: '/'
+      default: '/',
     },
     {
       key: ConfigKeys.tokenHost,
       default: 'https://accounts.secure.freee.co.jp',
-      production: 'https://accounts.secure.freee.co.jp'
+      production: 'https://accounts.secure.freee.co.jp',
     },
     {
       key: ConfigKeys.authorizePath,
-      default: '/public_api/authorize'
+      default: '/public_api/authorize',
     },
     {
       key: ConfigKeys.tokenPath,
-      default: '/public_api/token'
-    }
+      default: '/public_api/token',
+    },
   ],
   firebase: [
     {
       key: ConfigKeys.cryptoKeyBucket,
-      default: `${projectId}.appspot.com`
-    }
-  ]
+      default: `${projectId}.appspot.com`,
+    },
+  ],
 }
 
 export class ConfigManager {
@@ -137,12 +136,12 @@ export class ConfigManager {
     const config: FirebaseFunctionsConfigs = {
       env: {
         mode: envMode,
-        region: region
+        region: region,
       },
       freee: {
         client_id: freeeClientId || '',
-        client_secret: freeeClientSecret || ''
-      }
+        client_secret: freeeClientSecret || '',
+      },
     }
     return config
   }
@@ -152,7 +151,7 @@ export class ConfigManager {
       .concat(DEFAULT_CONFIGS.freee)
       .concat(DEFAULT_CONFIGS.firebase)
     const config = defaultConfigs.find(
-      (defaultConfig) => defaultConfig.key === key
+      (defaultConfig) => defaultConfig.key === key,
     )!
     return this.isProduction() && config.production
       ? config.production

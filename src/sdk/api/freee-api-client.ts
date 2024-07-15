@@ -19,19 +19,19 @@ export class FreeeAPIClient {
     url: string,
     params: ParamJSON,
     userId: string,
-    customHeaders?: CustomHeaders
+    customHeaders?: CustomHeaders,
   ): AxiosPromise<T> {
     return this.tokenManager.get(userId).then((accessToken) => {
       const headers = {
         Authorization: `Bearer ${accessToken}`,
         'X-Api-Version': '2020-06-15',
         'Content-Type': 'application/json',
-        ...customHeaders
+        ...customHeaders,
       }
 
       return this.axios.get(url, {
         params: params,
-        headers: headers
+        headers: headers,
       })
     })
   }
@@ -43,7 +43,7 @@ export class FreeeAPIClient {
     url: string,
     data: ParamJSON,
     userId: string,
-    customHeaders?: CustomHeaders
+    customHeaders?: CustomHeaders,
   ): AxiosPromise<T> {
     return this.tokenManager.get(userId).then((accessToken) => {
       let sendData = data
@@ -68,12 +68,12 @@ export class FreeeAPIClient {
 
       const headers = {
         ...sendHeaders,
-        ...customHeaders
+        ...customHeaders,
       }
 
       return this.axios.post(url, sendData, {
         maxContentLength: maxContentLength,
-        headers: headers
+        headers: headers,
       })
     })
   }
@@ -85,17 +85,17 @@ export class FreeeAPIClient {
     url: string,
     data: ParamJSON,
     userId: string,
-    customHeaders?: CustomHeaders
+    customHeaders?: CustomHeaders,
   ): AxiosPromise<T> {
     return this.tokenManager.get(userId).then((accessToken) => {
       const headers = {
         Authorization: `Bearer ${accessToken}`,
         'X-Api-Version': '2020-06-15',
         'Content-Type': 'application/json',
-        ...customHeaders
+        ...customHeaders,
       }
       return this.axios.put(url, data, {
-        headers: headers
+        headers: headers,
       })
     })
   }
@@ -107,18 +107,18 @@ export class FreeeAPIClient {
     url: string,
     data: ParamJSON,
     userId: string,
-    customHeaders?: CustomHeaders
+    customHeaders?: CustomHeaders,
   ): AxiosPromise {
     return this.tokenManager.get(userId).then((accessToken) => {
       const headers = {
         Authorization: `Bearer ${accessToken}`,
         'X-Api-Version': '2020-06-15',
         'Content-Type': 'application/json',
-        ...customHeaders
+        ...customHeaders,
       }
       return this.axios.delete(url, {
         data: data,
-        headers: headers
+        headers: headers,
       })
     })
   }
