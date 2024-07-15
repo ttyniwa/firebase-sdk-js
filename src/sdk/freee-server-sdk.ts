@@ -8,7 +8,7 @@ import { SDKConfig } from './const/types'
 import { ConfigManager } from './services/config-manager'
 import { FreeeCryptor } from './services/freee-cryptor'
 import { TokenManager } from './services/token-manager'
-import { app, credential, initializeApp, ServiceAccount } from 'firebase-admin'
+import { app, credential, initializeApp } from 'firebase-admin'
 import { App } from 'firebase-admin/app'
 
 export class FreeeServerSDK {
@@ -20,14 +20,17 @@ export class FreeeServerSDK {
    * @param serviceAccount Cloud Run、App Engine、Cloud Functions などの Google 環境で実行されるアプリケーションではnullを指定することを強くおすすめします。
    *                       https://firebase.google.com/docs/admin/setup?hl=ja#initialize-sdk
    */
-  constructor(config: SDKConfig, serviceAccount: ServiceAccount | null) {
+  constructor(
+    config: SDKConfig,
+    serviceAccount: { [key: string]: string } | null,
+  ) {
     // Set up firebase-admin
     if (serviceAccount) {
       // for local
       this.firebaseAdminApp = initializeApp({
         credential: credential.cert(serviceAccount),
-        databaseURL: `https://${serviceAccount.projectId}.firebaseio.com`,
-        storageBucket: `${serviceAccount.projectId}.appspot.com`,
+        databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
+        storageBucket: `${serviceAccount.project_id}.appspot.com`,
       })
     } else {
       // Firebase setup by ADC
