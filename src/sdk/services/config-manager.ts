@@ -4,28 +4,16 @@ import { config as loadEnv } from 'dotenv'
 
 loadEnv()
 
-const SUPPORTED_REGIONS = functions.SUPPORTED_REGIONS
+type SupportedRegions = (typeof functions.SUPPORTED_REGIONS)[number]
 const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG!)
 const projectId = adminConfig.projectId
-const defaultRegion = 'asia-northeast1' as (typeof SUPPORTED_REGIONS)[number]
-
-let region: (typeof SUPPORTED_REGIONS)[number]
-const supportedRegionsArray: string[] = SUPPORTED_REGIONS.map(
-  (regionMap) => regionMap,
-)
-
-if (
+const region: SupportedRegions =
   process.env.ENV_REGION &&
-  supportedRegionsArray.includes(process.env.ENV_REGION)
-) {
-  region = process.env.ENV_REGION as (typeof SUPPORTED_REGIONS)[number]
-} else {
-  region = defaultRegion
-}
-
-const envMode = process.env.ENV_MODE || 'production'
-const freeeClientId = process.env.FREEE_CLIENT_ID || ''
-const freeeClientSecret = process.env.FREEE_CLIENT_SECRET || ''
+  (functions.SUPPORTED_REGIONS as readonly string[]).includes(
+    process.env.ENV_REGION,
+  )
+    ? (process.env.ENV_REGION as SupportedRegions)
+    : 'asia-northeast1'
 
 export enum ConfigKeys {
   apiHost = 'apiHost',
@@ -44,7 +32,7 @@ export enum ConfigKeys {
 interface FirebaseFunctionsConfigs {
   env: {
     mode: 'production' | string
-    region: typeof SUPPORTED_REGIONS | string
+    region: SupportedRegions | string
   }
   freee: {
     client_id: string
@@ -125,25 +113,20 @@ const DEFAULT_CONFIGS: DefaltConfigs = {
 
 export class ConfigManager {
   static get(configs: SDKBaseConfig | null, key: ConfigKeys) {
-    if (configs && this.hasKey(configs, key)) {
-      return configs[key]
-    }
-
-    return this.getDefaultValue(key)
+    return configs?.[key] ?? this.getDefaultValue(key)
   }
 
-  static getFunctionsConfigs(): FirebaseFunctionsConfigs {
-    const config: FirebaseFunctionsConfigs = {
+  static get config(): FirebaseFunctionsConfigs {
+    return {
       env: {
-        mode: envMode,
-        region: region,
+        mode: process.env.ENV_MODE || 'production',
+        region,
       },
       freee: {
-        client_id: freeeClientId || '',
-        client_secret: freeeClientSecret || '',
+        client_id: process.env.FREEE_CLIENT_ID || '',
+        client_secret: process.env.FREEE_CLIENT_SECRET || '',
       },
     }
-    return config
   }
 
   private static getDefaultValue(key: ConfigKeys) {
@@ -153,17 +136,12 @@ export class ConfigManager {
     const config = defaultConfigs.find(
       (defaultConfig) => defaultConfig.key === key,
     )!
-    return this.isProduction() && config.production
+    return this.isProduction && config.production
       ? config.production
       : config.default
   }
 
-  private static isProduction() {
-    const configs = this.getFunctionsConfigs()
-    return configs.env && configs.env.mode === 'production'
-  }
-
-  private static hasKey(configs: SDKBaseConfig, key: ConfigKeys) {
-    return Object.keys(configs).find((configKey) => configKey === key)
+  private static get isProduction() {
+    return this.config.env.mode === 'production'
   }
 }

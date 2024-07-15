@@ -34,9 +34,8 @@ export class FreeeFirebaseAuthClient {
     this.tokenManager = tokenManager
     // path setting
     const freeeConfigs = config.freee!
-    const functionsConfigs = ConfigManager.getFunctionsConfigs()
-    this.clientId = functionsConfigs.freee.client_id
-    this.clientSecret = functionsConfigs.freee.client_secret
+    this.clientId = ConfigManager.config.freee.client_id
+    this.clientSecret = ConfigManager.config.freee.client_secret
     this.redirectPath = ConfigManager.get(freeeConfigs, ConfigKeys.redirectPath)
     this.callbackPath = ConfigManager.get(freeeConfigs, ConfigKeys.callbackPath)
     this.companiesPath = ConfigManager.get(

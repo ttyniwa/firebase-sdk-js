@@ -82,7 +82,7 @@ class FreeeServerSDK {
   }
 
   private getCredentials(freeeConfigs: SDKFreeeConfig) {
-    const freee = ConfigManager.getFunctionsConfigs().freee
+    const freee = ConfigManager.config.freee
 
     const credentials = {
       client: {

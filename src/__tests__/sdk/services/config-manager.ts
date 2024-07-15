@@ -4,6 +4,7 @@ const MODE = 'production'
 process.env.FIREBASE_CONFIG = JSON.stringify({
   projectId: PROJECT_ID,
 })
+process.env.ENV_REGION = REGION_US
 
 const mockGetMode = jest.fn().mockReturnValue(MODE)
 const mockGetRegion = jest.fn().mockReturnValue(REGION_US)
@@ -16,6 +17,7 @@ jest.mock('firebase-functions', () => {
         region: mockGetRegion(),
       },
     }),
+    SUPPORTED_REGIONS: ['us-central1', 'asia-northeast1'],
   }
 })
 
