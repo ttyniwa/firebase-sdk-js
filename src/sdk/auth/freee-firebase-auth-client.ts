@@ -8,7 +8,7 @@ import { AuthorizationCode } from 'simple-oauth2'
 
 export class FreeeFirebaseAuthClient {
   private admin: firebaseAdmin.app.App
-  private authorizationCode: AuthorizationCode // Can not use typescript version due to mismatch with freee oauth
+  private authorizationCode: AuthorizationCode
   private axios: AxiosStatic
   private tokenManager: TokenManager
   private redirectPath: string
@@ -17,8 +17,6 @@ export class FreeeFirebaseAuthClient {
   private homePath: string
   private appHost: string
   private authHost: string
-  // @ts-ignore  FIXME: tslint でエラーになる。不要なら削除する
-  private apiKey?: string
 
   constructor(
     admin: firebaseAdmin.app.App,
@@ -38,7 +36,6 @@ export class FreeeFirebaseAuthClient {
     this.homePath = ConfigManager.getFreeeConfig(config, 'homePath')
     this.appHost = ConfigManager.getFreeeConfig(config, 'appHost')
     this.authHost = ConfigManager.getFreeeConfig(config, 'authHost')
-    this.apiKey = config.firebase && config.firebase.apiKey!
   }
 
   /**

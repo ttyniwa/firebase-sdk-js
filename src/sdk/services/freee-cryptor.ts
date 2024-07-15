@@ -119,8 +119,8 @@ export class FreeeCryptor {
   private crypt(
     targetStr: string,
     algorithm: Cipher | Decipher,
-    inputEncoding: any,
-    outputEncoding: any,
+    inputEncoding: crypto.Encoding | undefined,
+    outputEncoding: crypto.Encoding,
   ) {
     let result = algorithm.update(targetStr, inputEncoding, outputEncoding)
     result += algorithm.final(outputEncoding)

@@ -1,5 +1,5 @@
-import { AxiosPromise, AxiosStatic } from 'axios'
-import { ParamJSON, CustomHeaders } from '../const/types'
+import { AxiosPromise, AxiosStatic, RawAxiosRequestHeaders } from 'axios'
+import { ParamJSON } from '../const/types'
 import { TokenManager } from '../services/token-manager'
 import * as FormData from 'form-data'
 
@@ -15,11 +15,11 @@ export class FreeeAPIClient {
   /**
    * Call freee api by GET
    */
-  get<T = any>(
+  get<T>(
     url: string,
     params: ParamJSON,
     userId: string,
-    customHeaders?: CustomHeaders,
+    customHeaders?: RawAxiosRequestHeaders,
   ): AxiosPromise<T> {
     return this.tokenManager.get(userId).then((accessToken) => {
       const headers = {
@@ -39,15 +39,15 @@ export class FreeeAPIClient {
   /**
    * Call freee api by POST
    */
-  post<T = any>(
+  post<T>(
     url: string,
     data: ParamJSON,
     userId: string,
-    customHeaders?: CustomHeaders,
+    customHeaders?: RawAxiosRequestHeaders,
   ): AxiosPromise<T> {
     return this.tokenManager.get(userId).then((accessToken) => {
       let sendData = data
-      let sendHeaders: { [key: string]: any } = {}
+      let sendHeaders: FormData.Headers = {}
       let sendContentType = 'application/json'
       const maxContentLength = 104857600
 
@@ -81,11 +81,11 @@ export class FreeeAPIClient {
   /**
    * Call freee api by PUT
    */
-  put<T = any>(
+  put<T>(
     url: string,
     data: ParamJSON,
     userId: string,
-    customHeaders?: CustomHeaders,
+    customHeaders?: RawAxiosRequestHeaders,
   ): AxiosPromise<T> {
     return this.tokenManager.get(userId).then((accessToken) => {
       const headers = {
@@ -107,7 +107,7 @@ export class FreeeAPIClient {
     url: string,
     data: ParamJSON,
     userId: string,
-    customHeaders?: CustomHeaders,
+    customHeaders?: RawAxiosRequestHeaders,
   ): AxiosPromise {
     return this.tokenManager.get(userId).then((accessToken) => {
       const headers = {
