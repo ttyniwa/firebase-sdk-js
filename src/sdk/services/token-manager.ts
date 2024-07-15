@@ -93,10 +93,10 @@ export class TokenManager {
 
     // encrypt and cache
     const token = (await this.encrypt({
-      accessToken: newToken.token.access_token,
-      refreshToken: newToken.token.refresh_token,
-      expiresIn: newToken.token.expires_in,
-      createdAt: newToken.token.created_at,
+      accessToken: newToken.token.access_token as string,
+      refreshToken: newToken.token.refresh_token as string,
+      expiresIn: newToken.token.expires_in as number,
+      createdAt: newToken.token.created_at as number,
     })) as FreeeTokenWithCryptInfo
     this.tokenCache[userId] = token
 
@@ -108,7 +108,7 @@ export class TokenManager {
 
     console.log('accessToken is successfully refreshed for user:', userId)
 
-    return newToken.token.access_token
+    return newToken.token.access_token as string
   }
 
   private tokenExpired(freeeToken: FreeeTokenWithCryptInfo) {

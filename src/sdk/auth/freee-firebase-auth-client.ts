@@ -62,10 +62,10 @@ export class FreeeFirebaseAuthClient {
       })
 
       const freeeToken = {
-        accessToken: result.token.access_token,
-        refreshToken: result.token.refresh_token,
-        expiresIn: result.token.expires_in,
-        createdAt: result.token.created_at,
+        accessToken: result.token.access_token as string,
+        refreshToken: result.token.refresh_token as string,
+        expiresIn: result.token.expires_in as number,
+        createdAt: result.token.created_at as number,
       } satisfies FreeeToken
 
       // get freee user
