@@ -9,9 +9,9 @@ export declare class FreeeFirebaseAuthClient {
     private authorizationCode;
     private axios;
     private tokenManager;
-    private redirectPath;
-    private callbackPath;
-    private companiesPath;
+    readonly redirectPath: string;
+    readonly callbackPath: string;
+    readonly companiesPath: string;
     private homePath;
     private appHost;
     private authHost;
@@ -24,18 +24,6 @@ export declare class FreeeFirebaseAuthClient {
      * Get token, save it to firebase and login firebase
      */
     callback(code: string, res: Response): Promise<void>;
-    /**
-     * path for redirect on freee authorization
-     */
-    getRedirectPath(): string;
-    /**
-     * path for callback on freee authorization
-     */
-    getCallbackPath(): string;
-    /**
-     * path for callback on freee authorization
-     */
-    getCompaniesPath(): string;
     /**
      * Create crypto key to bucket for it by specified date
      */

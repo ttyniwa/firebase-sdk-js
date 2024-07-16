@@ -11,9 +11,9 @@ export class FreeeFirebaseAuthClient {
   private authorizationCode: AuthorizationCode
   private axios: AxiosStatic
   private tokenManager: TokenManager
-  private redirectPath: string
-  private callbackPath: string
-  private companiesPath: string
+  readonly redirectPath: string
+  readonly callbackPath: string
+  readonly companiesPath: string
   private homePath: string
   private appHost: string
   private authHost: string
@@ -43,7 +43,7 @@ export class FreeeFirebaseAuthClient {
    */
   redirect(res: Response): void {
     const redirectUri = this.authorizationCode.authorizeURL({
-      redirect_uri: `${this.authHost}${this.getCallbackPath()}`,
+      redirect_uri: `${this.authHost}${this.callbackPath}`,
     })
     res.redirect(redirectUri)
   }
@@ -55,7 +55,7 @@ export class FreeeFirebaseAuthClient {
     try {
       const result = await this.authorizationCode.getToken({
         code: code,
-        redirect_uri: `${this.authHost}${this.getCallbackPath()}`,
+        redirect_uri: `${this.authHost}${this.callbackPath}`,
       })
 
       const freeeToken = {
@@ -87,27 +87,6 @@ export class FreeeFirebaseAuthClient {
       console.error('Some error occured on login process:', error)
       res.send(this.signInRefusedTemplate())
     }
-  }
-
-  /**
-   * path for redirect on freee authorization
-   */
-  getRedirectPath(): string {
-    return this.redirectPath
-  }
-
-  /**
-   * path for callback on freee authorization
-   */
-  getCallbackPath(): string {
-    return this.callbackPath
-  }
-
-  /**
-   * path for callback on freee authorization
-   */
-  getCompaniesPath(): string {
-    return this.companiesPath
   }
 
   /**
