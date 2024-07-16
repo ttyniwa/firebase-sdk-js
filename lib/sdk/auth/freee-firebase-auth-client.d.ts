@@ -15,7 +15,6 @@ export declare class FreeeFirebaseAuthClient {
     private homePath;
     private appHost;
     private authHost;
-    private apiKey?;
     constructor(admin: firebaseAdmin.app.App, authorizationCode: AuthorizationCode, axios: AxiosStatic, tokenManager: TokenManager, config: SDKConfig);
     /**
      * Redirect screen to authorize

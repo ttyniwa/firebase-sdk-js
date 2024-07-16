@@ -10,8 +10,8 @@ const mockSave = jest.fn()
 jest.mock('firebase-admin', () => {
   return {
     storage: () => ({
-      bucket: (bucketPath: string) => ({
-        file: (filePath: string) => ({
+      bucket: () => ({
+        file: () => ({
           download: async () => mockDownload(),
           exists: async () => mockExists(),
           save: async () => mockSave(),

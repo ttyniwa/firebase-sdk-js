@@ -7,7 +7,7 @@ const MARGIN_OF_EXPIRES_SECONDS = 300
 
 export class TokenManager {
   private admin: firebaseAdmin.app.App
-  private authorizationCode: AuthorizationCode // Can not use typescript version due to mismatch with freee oauth
+  private authorizationCode: AuthorizationCode
   private cryptor: FreeeCryptor | null
   private tokenCache: { [key: string]: FreeeTokenWithCryptInfo }
 

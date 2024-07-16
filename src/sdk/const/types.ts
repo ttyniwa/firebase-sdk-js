@@ -1,8 +1,5 @@
 export interface ParamJSON {
-  [key: string]: any
-}
-
-export interface CustomHeaders {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }
 
