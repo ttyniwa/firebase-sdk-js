@@ -46,11 +46,12 @@ export class FreeeCryptor {
     const keyFileName = format(new Date(), 'yyyyMM')
     const key = await this.getKey(keyFileName)
     const iv = crypto.randomBytes(IV_LENGTH)
+    const cipher = crypto.createCipheriv(ALGORITHM, key, iv)
 
     return {
       ...token,
-      accessToken: this.crypt(accessToken, this.cipher(key, iv), IN, OUT),
-      refreshToken: this.crypt(refreshToken, this.cipher(key, iv), IN, OUT),
+      accessToken: this.crypt(accessToken, cipher, IN, OUT),
+      refreshToken: this.crypt(refreshToken, cipher, IN, OUT),
       keyFileName,
       algorithm: ALGORITHM,
       iv,
@@ -74,30 +75,13 @@ export class FreeeCryptor {
   ): Promise<FreeeTokenWithCryptInfo> {
     const { accessToken, refreshToken, keyFileName, algorithm, iv } = token
     const key = await this.getKey(keyFileName)
+    const decipher = crypto.createDecipheriv(algorithm, key, iv)
 
     return {
       ...token,
-      accessToken: this.crypt(
-        accessToken,
-        this.decipher(algorithm, key, iv),
-        OUT,
-        IN,
-      ),
-      refreshToken: this.crypt(
-        refreshToken,
-        this.decipher(algorithm, key, iv),
-        OUT,
-        IN,
-      ),
+      accessToken: this.crypt(accessToken, decipher, OUT, IN),
+      refreshToken: this.crypt(refreshToken, decipher, OUT, IN),
     }
-  }
-
-  private cipher(cryptoKey: Buffer, iv: Buffer): Cipher {
-    return crypto.createCipheriv(ALGORITHM, cryptoKey, iv)
-  }
-
-  private decipher(algorithm: string, cryptoKey: Buffer, iv: Buffer): Decipher {
-    return crypto.createDecipheriv(algorithm, cryptoKey, iv)
   }
 
   private async getKey(keyFileName: string) {
