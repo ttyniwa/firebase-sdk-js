@@ -1,4 +1,4 @@
-import { AxiosPromise, AxiosStatic, RawAxiosRequestHeaders } from 'axios';
+import { AxiosStatic, RawAxiosRequestHeaders } from 'axios';
 import { ParamJSON } from '../const/types';
 import { TokenManager } from '../services/token-manager';
 export declare class FreeeAPIClient {
@@ -8,17 +8,17 @@ export declare class FreeeAPIClient {
     /**
      * Call freee api by GET
      */
-    get<T>(url: string, params: ParamJSON, userId: string, customHeaders?: RawAxiosRequestHeaders): AxiosPromise<T>;
+    get(url: string, params: ParamJSON, userId: string, customHeaders?: RawAxiosRequestHeaders): Promise<import("axios").AxiosResponse<any, any>>;
     /**
      * Call freee api by POST
      */
-    post<T>(url: string, data: ParamJSON, userId: string, customHeaders?: RawAxiosRequestHeaders): AxiosPromise<T>;
+    post(url: string, data: ParamJSON, userId: string, customHeaders?: RawAxiosRequestHeaders): Promise<import("axios").AxiosResponse<any, any>>;
     /**
      * Call freee api by PUT
      */
-    put<T>(url: string, data: ParamJSON, userId: string, customHeaders?: RawAxiosRequestHeaders): AxiosPromise<T>;
+    put(url: string, data: ParamJSON, userId: string, customHeaders?: RawAxiosRequestHeaders): Promise<import("axios").AxiosResponse<any, any>>;
     /**
      * Call freee api by GET
      */
-    delete(url: string, data: ParamJSON, userId: string, customHeaders?: RawAxiosRequestHeaders): AxiosPromise;
+    delete(url: string, data: ParamJSON, userId: string, customHeaders?: RawAxiosRequestHeaders): Promise<import("axios").AxiosResponse<any, any>>;
 }

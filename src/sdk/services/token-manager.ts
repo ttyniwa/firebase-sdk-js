@@ -115,8 +115,7 @@ export class TokenManager {
     const expiredSeconds =
       freeeToken.createdAt + freeeToken.expiresIn - MARGIN_OF_EXPIRES_SECONDS
     const nowInSeconds = new Date().getTime() / 1000
-    const shouldRefresh = nowInSeconds >= expiredSeconds
-    return shouldRefresh
+    return nowInSeconds >= expiredSeconds
   }
 
   private async getTokenFromFirebase(userId: string, fromFirestore?: boolean) {

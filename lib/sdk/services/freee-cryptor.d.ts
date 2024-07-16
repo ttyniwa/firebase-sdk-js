@@ -36,8 +36,6 @@ export declare class FreeeCryptor {
      * @return {Promise<Object>} - decrypted freee token object
      */
     decrypt(token: FreeeTokenWithCryptInfo): Promise<FreeeTokenWithCryptInfo>;
-    private cipher;
-    private decipher;
     private getKey;
     private crypt;
     private create;
