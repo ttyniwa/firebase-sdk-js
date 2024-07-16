@@ -10,13 +10,12 @@ import { FreeeCryptor } from './services/freee-cryptor'
 import { TokenManager } from './services/token-manager'
 import * as admin from 'firebase-admin'
 import { app, credential } from 'firebase-admin'
-import { App } from 'firebase-admin/app'
 import { AuthorizationCode, ModuleOptions } from 'simple-oauth2'
 
 export class FreeeServerSDK {
-  private firebaseAdminApp: app.App
-  private apiClient: FreeeAPIClient
-  private firebaseAuthClient: FreeeFirebaseAuthClient
+  readonly firebaseAdminApp: app.App
+  readonly apiClient: FreeeAPIClient
+  readonly firebaseAuthClient: FreeeFirebaseAuthClient
 
   /**
    * @param serviceAccount Cloud Run、App Engine、Cloud Functions などの Google 環境で実行されるアプリケーションではnullを指定することを強くおすすめします。
@@ -68,18 +67,6 @@ export class FreeeServerSDK {
       tokenManager,
       config,
     )
-  }
-
-  firebaseApp(): App {
-    return this.firebaseAdminApp
-  }
-
-  api(): FreeeAPIClient {
-    return this.apiClient
-  }
-
-  auth(): FreeeFirebaseAuthClient {
-    return this.firebaseAuthClient
   }
 
   private getCredentials(config: SDKConfig) {
