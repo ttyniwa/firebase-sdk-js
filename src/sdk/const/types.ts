@@ -93,6 +93,9 @@ export interface SDKFirebaseConfig {
 
   /**
    * cryptoKey for encrypt/decrypt token. (hex string)
+   *
+   * Example of generation command.
+   * `openssl rand -hex 32`
    */
   cryptoKey: string
 }
