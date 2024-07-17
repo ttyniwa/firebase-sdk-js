@@ -42,12 +42,9 @@ const DEFAULT_SDK_CONFIG = {
     authorizePath: '/public_api/authorize',
     tokenPath: '/public_api/token',
   } satisfies Required<SDKFreeeConfig>,
-  firebase: {
-    cryptoKeyBucket: `${projectId}.appspot.com`,
-  } satisfies SDKFirebaseConfig,
-} satisfies Required<SDKConfig>
+} satisfies Partial<SDKConfig>
 
-const PRODUCTION_SDK_CONFIG: SDKConfig = {
+const PRODUCTION_SDK_CONFIG: Partial<SDKConfig> = {
   freee: {
     appHost: `https://${projectId}.web.app`,
     authHost: `https://${region}-${projectId}.cloudfunctions.net/api/auth`,
@@ -56,19 +53,11 @@ const PRODUCTION_SDK_CONFIG: SDKConfig = {
 }
 
 export class ConfigManager {
-  static getFirebaseConfig(
-    sdkConfig: SDKConfig | null,
-    key: FirebaseConfigKeys,
-  ) {
-    return (
-      sdkConfig?.firebase?.[key] ??
-      (this.isProduction ? PRODUCTION_SDK_CONFIG.firebase?.[key] : undefined) ??
-      // DEFAULT_SDK_CONFIG.firebaseにはcryptoKeyBucketしか定義されていないので、エラーを回避するために型アサーションした
-      DEFAULT_SDK_CONFIG.firebase?.[key as 'cryptoKeyBucket']
-    )
+  static getFirebaseConfig(sdkConfig: SDKConfig, key: FirebaseConfigKeys) {
+    return sdkConfig?.firebase?.[key]
   }
 
-  static getFreeeConfig(sdkConfig: SDKConfig | null, key: FreeeConfigKeys) {
+  static getFreeeConfig(sdkConfig: SDKConfig, key: FreeeConfigKeys) {
     return (
       sdkConfig?.freee?.[key] ??
       (this.isProduction ? PRODUCTION_SDK_CONFIG.freee?.[key] : undefined) ??

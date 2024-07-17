@@ -5,16 +5,16 @@ import { SDKConfig } from '../const/types';
 import { TokenManager } from '../services/token-manager';
 import { AuthorizationCode } from 'simple-oauth2';
 export declare class FreeeFirebaseAuthClient {
-    private admin;
-    private authorizationCode;
-    private axios;
-    private tokenManager;
+    private readonly admin;
+    private readonly authorizationCode;
+    private readonly axios;
+    private readonly tokenManager;
     readonly redirectPath: string;
     readonly callbackPath: string;
     readonly companiesPath: string;
-    private homePath;
-    private appHost;
-    private authHost;
+    private readonly homePath;
+    private readonly appHost;
+    private readonly authHost;
     constructor(admin: firebaseAdmin.app.App, authorizationCode: AuthorizationCode, axios: AxiosStatic, tokenManager: TokenManager, config: SDKConfig);
     /**
      * Redirect screen to authorize
@@ -24,10 +24,6 @@ export declare class FreeeFirebaseAuthClient {
      * Get token, save it to firebase and login firebase
      */
     callback(code: string, res: Response): Promise<void>;
-    /**
-     * Create crypto key to bucket for it by specified date
-     */
-    createCryptoKey(date: Date): Promise<void>;
     private getFreeeUser;
     /**
      * create firebase account and token

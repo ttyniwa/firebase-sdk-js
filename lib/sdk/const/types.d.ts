@@ -78,11 +78,11 @@ export interface SDKFirebaseConfig {
      */
     apiKey?: string;
     /**
-     * Bucket name for cryptoKey
+     * cryptoKey for encrypt/decrypt token.
      */
-    cryptoKeyBucket?: string;
+    cryptoKey: string;
 }
 export interface SDKConfig {
     freee?: SDKFreeeConfig;
-    firebase?: SDKFirebaseConfig;
+    firebase: SDKFirebaseConfig;
 }

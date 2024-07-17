@@ -31,7 +31,6 @@ export class FreeeServerSDK {
       this.firebaseAdminApp = admin.initializeApp({
         credential: credential.cert(serviceAccount),
         databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
-        storageBucket: `${serviceAccount.project_id}.appspot.com`,
       })
     } else {
       // Firebase setup by ADC
@@ -39,15 +38,11 @@ export class FreeeServerSDK {
     }
 
     // Set up cryptor for freee token
-    const cryptoKeyBucket = ConfigManager.getFirebaseConfig(
-      config,
-      'cryptoKeyBucket',
-    )
-    const cryptor = cryptoKeyBucket
-      ? new FreeeCryptor(
-          this.firebaseAdminApp.storage().bucket(cryptoKeyBucket),
-        )
-      : null
+    const cryptoKey = ConfigManager.getFirebaseConfig(config, 'cryptoKey')
+    if (cryptoKey == null) {
+      throw new Error('cryptoKey must provided.')
+    }
+    const cryptor = new FreeeCryptor(Buffer.from(cryptoKey, 'hex'))
 
     // Set up oauth2 client
     const authorizationCode = new AuthorizationCode(this.getCredentials(config))

@@ -14,8 +14,8 @@ interface FirebaseFunctionsConfigs {
     };
 }
 export declare class ConfigManager {
-    static getFirebaseConfig(sdkConfig: SDKConfig | null, key: FirebaseConfigKeys): string;
-    static getFreeeConfig(sdkConfig: SDKConfig | null, key: FreeeConfigKeys): string;
+    static getFirebaseConfig(sdkConfig: SDKConfig, key: FirebaseConfigKeys): string | undefined;
+    static getFreeeConfig(sdkConfig: SDKConfig, key: FreeeConfigKeys): string;
     static get config(): FirebaseFunctionsConfigs;
     private static get isProduction();
 }

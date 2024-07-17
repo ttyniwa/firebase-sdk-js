@@ -17,15 +17,13 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "test": "jest",
+    "test:watch": "jest --watch",
     "fmt": "prettier --write 'src/**/*.{tsx,ts}'"
   },
   "main": "lib/index.js",
   "types": "lib/index.d.js",
   "dependencies": {
-    "@google-cloud/storage": "7.11.3",
     "axios": "^1.7.2",
-    "body-parser": "^1.20.2",
-    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "firebase-admin": "^12.2.0",

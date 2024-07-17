@@ -90,13 +90,14 @@ export interface SDKFirebaseConfig {
    * Api key for firebase project
    */
   apiKey?: string
+
   /**
-   * Bucket name for cryptoKey
+   * cryptoKey for encrypt/decrypt token. (hex string)
    */
-  cryptoKeyBucket?: string
+  cryptoKey: string
 }
 
 export interface SDKConfig {
   freee?: SDKFreeeConfig
-  firebase?: SDKFirebaseConfig
+  firebase: SDKFirebaseConfig
 }

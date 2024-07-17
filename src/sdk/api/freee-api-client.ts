@@ -58,11 +58,11 @@ export class FreeeAPIClient {
       sendHeaders = formData.getHeaders()
       sendContentType = 'multipart/form-data'
     }
-    sendHeaders['Authorization'] = `Bearer ${accessToken}`
-    sendHeaders['X-Api-Version'] = '2020-06-15'
-    sendHeaders['Content-Type'] = sendContentType
     const headers = {
       ...sendHeaders,
+      Authorization: `Bearer ${accessToken}`,
+      'X-Api-Version': '2020-06-15',
+      'Content-Type': sendContentType,
       ...customHeaders,
     }
     return await this.axios.post(url, sendData, {

@@ -6,19 +6,13 @@ import { AuthorizationCode } from 'simple-oauth2'
 const MARGIN_OF_EXPIRES_SECONDS = 300
 
 export class TokenManager {
-  private admin: firebaseAdmin.app.App
-  private authorizationCode: AuthorizationCode
-  private cryptor: FreeeCryptor | null
   private tokenCache: { [key: string]: FreeeTokenWithCryptInfo }
 
   constructor(
-    admin: firebaseAdmin.app.App,
-    authorizationCode: AuthorizationCode,
-    cryptor: FreeeCryptor | null,
+    private readonly admin: firebaseAdmin.app.App,
+    private readonly authorizationCode: AuthorizationCode,
+    private readonly cryptor: FreeeCryptor,
   ) {
-    this.admin = admin
-    this.authorizationCode = authorizationCode
-    this.cryptor = cryptor
     this.tokenCache = {}
   }
 
@@ -28,7 +22,7 @@ export class TokenManager {
   async get(userId: string): Promise<string> {
     const freeeToken = await this.getTokenFromFirebase(userId)
 
-    if (this.tokenExpired(freeeToken)) {
+    if (this.isTokenExpired(freeeToken)) {
       console.log(`accessToken has been expired for user:`, userId)
 
       try {
@@ -38,7 +32,7 @@ export class TokenManager {
           console.log('Token is already refreshed in other instance:', error)
 
           const newToken = await this.getTokenFromFirebase(userId, true)
-          if (this.tokenExpired(newToken)) {
+          if (this.isTokenExpired(newToken)) {
             console.error('Can not get available token:', error)
             throw error
           }
@@ -60,7 +54,7 @@ export class TokenManager {
     email: string,
     freeeToken: FreeeToken,
   ): Promise<void> {
-    const token = await this.encrypt(freeeToken)
+    const token = await this.cryptor.encrypt(freeeToken)
 
     // Save freee token to firestore
     await this.admin
@@ -70,12 +64,6 @@ export class TokenManager {
         ...token,
         email,
       })
-  }
-
-  async createCryptoKey(date: Date): Promise<void> {
-    if (this.cryptor) {
-      await this.cryptor.createCryptoKey(date)
-    }
   }
 
   private async refreshToken(
@@ -92,7 +80,7 @@ export class TokenManager {
     const newToken = await accessToken.refresh()
 
     // encrypt and cache
-    const token = (await this.encrypt({
+    const token = (await this.cryptor.encrypt({
       accessToken: newToken.token.access_token as string,
       refreshToken: newToken.token.refresh_token as string,
       expiresIn: newToken.token.expires_in as number,
@@ -111,18 +99,18 @@ export class TokenManager {
     return newToken.token.access_token as string
   }
 
-  private tokenExpired(freeeToken: FreeeTokenWithCryptInfo) {
+  private isTokenExpired(freeeToken: FreeeTokenWithCryptInfo) {
     const expiredSeconds =
       freeeToken.createdAt + freeeToken.expiresIn - MARGIN_OF_EXPIRES_SECONDS
     const nowInSeconds = new Date().getTime() / 1000
     return nowInSeconds >= expiredSeconds
   }
 
-  private async getTokenFromFirebase(userId: string, fromFirestore?: boolean) {
-    if (!fromFirestore) {
+  private async getTokenFromFirebase(userId: string, noCache?: boolean) {
+    if (!noCache) {
       const cachedToken = this.tokenCache[userId]
       if (cachedToken) {
-        return await this.decrypt(cachedToken)
+        return await this.cryptor.decrypt(cachedToken)
       }
     }
 
@@ -135,14 +123,6 @@ export class TokenManager {
 
     console.log('Token is retrieved from firestore for user:', userId)
 
-    return await this.decrypt(token)
-  }
-
-  private async encrypt(freeeToken: FreeeToken) {
-    return this.cryptor ? await this.cryptor.encrypt(freeeToken) : freeeToken
-  }
-
-  private async decrypt(freeeToken: FreeeTokenWithCryptInfo) {
-    return this.cryptor ? await this.cryptor.decrypt(freeeToken) : freeeToken
+    return await this.cryptor.decrypt(token)
   }
 }

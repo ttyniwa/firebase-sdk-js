@@ -7,28 +7,20 @@ import { TokenManager } from '../services/token-manager'
 import { AuthorizationCode } from 'simple-oauth2'
 
 export class FreeeFirebaseAuthClient {
-  private admin: firebaseAdmin.app.App
-  private authorizationCode: AuthorizationCode
-  private axios: AxiosStatic
-  private tokenManager: TokenManager
   readonly redirectPath: string
   readonly callbackPath: string
   readonly companiesPath: string
-  private homePath: string
-  private appHost: string
-  private authHost: string
+  private readonly homePath: string
+  private readonly appHost: string
+  private readonly authHost: string
 
   constructor(
-    admin: firebaseAdmin.app.App,
-    authorizationCode: AuthorizationCode,
-    axios: AxiosStatic,
-    tokenManager: TokenManager,
+    private readonly admin: firebaseAdmin.app.App,
+    private readonly authorizationCode: AuthorizationCode,
+    private readonly axios: AxiosStatic,
+    private readonly tokenManager: TokenManager,
     config: SDKConfig,
   ) {
-    this.admin = admin
-    this.authorizationCode = authorizationCode
-    this.axios = axios
-    this.tokenManager = tokenManager
     // path setting
     this.redirectPath = ConfigManager.getFreeeConfig(config, 'redirectPath')
     this.callbackPath = ConfigManager.getFreeeConfig(config, 'callbackPath')
@@ -87,13 +79,6 @@ export class FreeeFirebaseAuthClient {
       console.error('Some error occured on login process:', error)
       res.send(this.signInRefusedTemplate())
     }
-  }
-
-  /**
-   * Create crypto key to bucket for it by specified date
-   */
-  async createCryptoKey(date: Date): Promise<void> {
-    await this.tokenManager.createCryptoKey(date)
   }
 
   private getFreeeUser(accessToken: string) {
