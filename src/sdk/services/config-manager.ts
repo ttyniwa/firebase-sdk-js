@@ -1,8 +1,5 @@
 import * as functions from 'firebase-functions'
 import { SDKConfig, SDKFirebaseConfig, SDKFreeeConfig } from '../const/types'
-import { config as loadEnv } from 'dotenv'
-
-loadEnv()
 
 type SupportedRegions = (typeof functions.SUPPORTED_REGIONS)[number]
 const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG!)
