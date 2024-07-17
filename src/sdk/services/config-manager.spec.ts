@@ -21,7 +21,7 @@ jest.mock('firebase-functions', () => {
   }
 })
 
-import { ConfigManager } from '../../../sdk/services/config-manager'
+import { ConfigManager } from './config-manager'
 
 beforeAll(() => {
   console.log('call before all')

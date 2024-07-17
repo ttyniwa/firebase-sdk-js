@@ -15,5 +15,6 @@
   "compileOnSave": true,
   // nullチェックを有効にする
   "strictNullChecks": true,
-  "include": ["src", "node_modules/@types/jest"]
+  "include": ["src", "node_modules/@types/jest"],
+  "exclude": ["**/*.spec.ts"]
 }

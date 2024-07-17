@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin'
-import { FreeeCryptor } from '../../../sdk/services/freee-cryptor'
+import { FreeeCryptor } from './freee-cryptor'
 
 const key = Buffer.from('aaa', 'utf8')
 
