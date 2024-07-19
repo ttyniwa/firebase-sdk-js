@@ -4,13 +4,12 @@
 import axios from 'axios'
 import { FreeeAPIClient } from './api/freee-api-client'
 import { FreeeFirebaseAuthClient } from './auth/freee-firebase-auth-client'
-import { SDKConfig } from './const/types'
-import { ConfigManager } from './services/config-manager'
 import { FreeeCryptor } from './services/freee-cryptor'
 import { TokenManager } from './services/token-manager'
 import * as admin from 'firebase-admin'
 import { app, credential } from 'firebase-admin'
 import { AuthorizationCode, ModuleOptions } from 'simple-oauth2'
+import { SDKConfig } from './services/create-sdk-config'
 
 export class FreeeServerSDK {
   readonly firebaseAdminApp: app.App
@@ -22,7 +21,7 @@ export class FreeeServerSDK {
    *                       https://firebase.google.com/docs/admin/setup?hl=ja#initialize-sdk
    */
   constructor(
-    config: SDKConfig,
+    config: Required<SDKConfig>,
     serviceAccount: { [key: string]: string } | null,
   ) {
     // Set up firebase-admin
@@ -38,7 +37,7 @@ export class FreeeServerSDK {
     }
 
     // Set up cryptor for freee token
-    const cryptoKey = ConfigManager.getFirebaseConfig(config, 'cryptoKey')
+    const cryptoKey = config.cryptoKey
     if (cryptoKey == null) {
       throw new Error('cryptoKey must provided.')
     }
@@ -52,7 +51,7 @@ export class FreeeServerSDK {
       cryptor,
     )
 
-    axios.defaults.baseURL = ConfigManager.getFreeeConfig(config, 'apiHost')
+    axios.defaults.baseURL = config.apiHost
 
     this.apiClient = new FreeeAPIClient(tokenManager, axios)
     this.firebaseAuthClient = new FreeeFirebaseAuthClient(
@@ -67,13 +66,13 @@ export class FreeeServerSDK {
   private getCredentials(config: SDKConfig) {
     return {
       client: {
-        id: ConfigManager.config.freee.client_id,
-        secret: ConfigManager.config.freee.client_secret,
+        id: config.clientId,
+        secret: config.clientSecret,
       },
       auth: {
-        tokenHost: ConfigManager.getFreeeConfig(config, 'tokenHost'),
-        authorizePath: ConfigManager.getFreeeConfig(config, 'authorizePath'),
-        tokenPath: ConfigManager.getFreeeConfig(config, 'tokenPath'),
+        tokenHost: config.tokenHost!,
+        authorizePath: config.authorizePath,
+        tokenPath: config.tokenPath,
       },
     } satisfies ModuleOptions
   }

@@ -1,7 +1,9 @@
 import { AxiosStatic, RawAxiosRequestHeaders } from 'axios'
-import { ParamJSON } from '../const/types'
 import { TokenManager } from '../services/token-manager'
 import * as FormData from 'form-data'
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ParamJSON = Record<string, any>
 
 export class FreeeAPIClient {
   private tokenManager: TokenManager

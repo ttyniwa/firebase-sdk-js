@@ -1,10 +1,10 @@
 import { AxiosStatic } from 'axios'
 import * as firebaseAdmin from 'firebase-admin'
 import { Response } from 'firebase-functions'
-import { FreeeToken, SDKConfig } from '../const/types'
-import { ConfigManager } from '../services/config-manager'
+import { FreeeToken } from '../const/types'
 import { TokenManager } from '../services/token-manager'
 import { AuthorizationCode } from 'simple-oauth2'
+import { SDKConfig } from '../services/create-sdk-config'
 
 export class FreeeFirebaseAuthClient {
   readonly redirectPath: string
@@ -19,15 +19,15 @@ export class FreeeFirebaseAuthClient {
     private readonly authorizationCode: AuthorizationCode,
     private readonly axios: AxiosStatic,
     private readonly tokenManager: TokenManager,
-    config: SDKConfig,
+    config: Required<SDKConfig>,
   ) {
     // path setting
-    this.redirectPath = ConfigManager.getFreeeConfig(config, 'redirectPath')
-    this.callbackPath = ConfigManager.getFreeeConfig(config, 'callbackPath')
-    this.companiesPath = ConfigManager.getFreeeConfig(config, 'companiesPath')
-    this.homePath = ConfigManager.getFreeeConfig(config, 'homePath')
-    this.appHost = ConfigManager.getFreeeConfig(config, 'appHost')
-    this.authHost = ConfigManager.getFreeeConfig(config, 'authHost')
+    this.redirectPath = config.redirectPath
+    this.callbackPath = config.callbackPath
+    this.companiesPath = config.companiesPath
+    this.homePath = config.homePath
+    this.appHost = config.appHost
+    this.authHost = config.authHost
   }
 
   /**

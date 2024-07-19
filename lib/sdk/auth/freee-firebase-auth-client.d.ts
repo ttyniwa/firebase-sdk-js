@@ -1,9 +1,9 @@
 import { AxiosStatic } from 'axios';
 import * as firebaseAdmin from 'firebase-admin';
 import { Response } from 'firebase-functions';
-import { SDKConfig } from '../const/types';
 import { TokenManager } from '../services/token-manager';
 import { AuthorizationCode } from 'simple-oauth2';
+import { SDKConfig } from '../services/create-sdk-config';
 export declare class FreeeFirebaseAuthClient {
     private readonly admin;
     private readonly authorizationCode;
@@ -15,7 +15,7 @@ export declare class FreeeFirebaseAuthClient {
     private readonly homePath;
     private readonly appHost;
     private readonly authHost;
-    constructor(admin: firebaseAdmin.app.App, authorizationCode: AuthorizationCode, axios: AxiosStatic, tokenManager: TokenManager, config: SDKConfig);
+    constructor(admin: firebaseAdmin.app.App, authorizationCode: AuthorizationCode, axios: AxiosStatic, tokenManager: TokenManager, config: Required<SDKConfig>);
     /**
      * Redirect screen to authorize
      */
