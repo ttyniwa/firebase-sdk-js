@@ -102,20 +102,18 @@ const DEFAULT_SDK_CONFIG = {
   tokenPath: '/public_api/token',
 } as const satisfies Partial<SDKConfig>
 
-export function createLocalSdkConfig(config: SDKConfig): Required<SDKConfig> {
+export function createSdkConfig(
+  config: SDKConfig,
+  isEmulator: boolean,
+): Required<SDKConfig> {
   return {
     ...DEFAULT_SDK_CONFIG,
-    appHost: 'http://localhost:5000',
-    authHost: `http://localhost:5001/${projectId}/${config.functionsRegion}/api/auth`,
-    ...config,
-  }
-}
-
-export function createGcpSdkConfig(config: SDKConfig): Required<SDKConfig> {
-  return {
-    ...DEFAULT_SDK_CONFIG,
-    appHost: `https://${projectId}.web.app`,
-    authHost: `https://${config.functionsRegion}-${projectId}.cloudfunctions.net/api/auth`,
+    appHost: isEmulator
+      ? 'http://localhost:5000'
+      : `https://${projectId}.web.app`,
+    authHost: isEmulator
+      ? `http://localhost:5001/${projectId}/${config.functionsRegion}/api/auth`
+      : `https://${config.functionsRegion}-${projectId}.cloudfunctions.net/api/auth`,
     ...config,
   }
 }

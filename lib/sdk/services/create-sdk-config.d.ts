@@ -73,5 +73,4 @@ export interface SDKConfig {
      */
     tokenPath?: string;
 }
-export declare function createLocalSdkConfig(config: SDKConfig): Required<SDKConfig>;
-export declare function createGcpSdkConfig(config: SDKConfig): Required<SDKConfig>;
+export declare function createSdkConfig(config: SDKConfig, isEmulator: boolean): Required<SDKConfig>;
