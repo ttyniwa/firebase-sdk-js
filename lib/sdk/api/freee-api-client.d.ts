@@ -1,6 +1,8 @@
 import { AxiosStatic, RawAxiosRequestHeaders } from 'axios';
 import { TokenManager } from '../services/token-manager';
-export type ParamJSON = Record<string, any>;
+export interface ParamJSON {
+    [key: string]: any;
+}
 export declare class FreeeAPIClient {
     private tokenManager;
     private axios;
